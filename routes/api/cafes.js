@@ -19,7 +19,32 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const newCafe = new Cafe({
-    name: req.body.name
+    name: req.body.name,
+    city: req.body.city,
+    ratings: {
+      overall: req.body.ratings.overall,
+      cleanliness: req.body.ratings.cleanliness,
+      coffee: req.body.ratings.coffee,
+      food: req.body.ratings.food,
+      usability: req.body.ratings.usability,
+      price: req.body.ratings.price
+    },
+    features: {
+      wifi: req.body.features.wifi,
+      seats: req.body.features.seats,
+      water: req.body.features.water
+    },
+    location: {
+      station: req.body.location.station,
+      line: req.body.location.line,
+      minsFromStation: req.body.location.minsFromStation
+    },
+    posts: {
+      date: req.body.posts.date,
+      visitRating: req.body.posts.visitRating,
+      order: req.body.posts.order,
+      textContent: req.body.posts.textContent
+    }
   });
 
   newCafe.save()
