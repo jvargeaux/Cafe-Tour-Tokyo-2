@@ -18,6 +18,7 @@
         <!-- <li><router-link to="/map">Map</router-link></li> -->
         <li v-if="user && user.email === 'fakeAdmin@gmail.com'"><router-link to="/api">API</router-link></li>
         <li v-if="user"><router-link to="/profile">Profile</router-link></li>
+        <li v-if="user && user.email === 'jvargeaux@gmail.com'"><router-link to="/database">Database</router-link></li>
         <!-- <li><router-link to="/login">Login</router-link></li> -->
       </ul>
     </nav>
@@ -28,7 +29,7 @@
   const DASHBOARD_URL = window.location.hostname === 'localhost' ?
     'http://' + window.location.hostname + ':5000/dashboard' :
     'https://' + window.location.host + '/dashboard';
-  
+
   export default {
     name: 'Navigation',
     props: {
@@ -168,11 +169,12 @@
     font-size: 18px;
     font-weight: 500;
     padding: 12px 36px;
-    background-color: rgba(46,46,46,.5);
+    background-color: rgba(24,24,24,.65);
+    transition: color 0.25s, background 0.25s;
   }
 
   nav ul li a:hover {
-    color: #131313;
+    color: #3d736c;
     background-color: #f9f9f9;
     cursor: pointer;
   }

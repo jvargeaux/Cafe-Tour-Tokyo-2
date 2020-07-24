@@ -19,12 +19,7 @@
     flex-direction: column;
     justify-content: center;
   }
-  h1 {
-    font-family: 'Julius Sans One', sans-serif;
-    text-align: center;
-    margin-bottom: 6vh;
-  }
   p {
-    line-height: 1.6em;
+    line-height: 1.5em;
   }
 </style>

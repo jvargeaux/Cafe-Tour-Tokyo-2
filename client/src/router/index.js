@@ -5,6 +5,7 @@ import About from '../views/About.vue'
 import List from '../views/List.vue'
 import Map from '../views/Map.vue'
 import API from '../views/API.vue'
+import Database from '../views/Database.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 
@@ -35,6 +36,11 @@ const routes = [
     path: '/api',
     name: 'api',
     component: API
+  },
+  {
+    path: '/database',
+    name: 'database',
+    component: Database
   },
   {
     path: '/login',

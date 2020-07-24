@@ -1,6 +1,6 @@
 <template>
-  <div class="cafe">
-    <div class="cafe-header" v-on:click.capture="$emit('toggle-expand', index)">
+  <div v-if="cafe" class="cafe">
+    <div class="cafe-header">
       <h2 class="name">{{ cafe.name }}</h2>
       <h4 class="city">{{ cafe.city }}</h4>
     </div>
@@ -12,7 +12,7 @@
     </div>
     <div class="information">
       <div class="ratings">
-        <h5 class="overall-rating">Overall: {{ cafe.ratings.overall }}</h5>
+        <h6 class="overall-rating">Overall: {{ cafe.ratings.overall }}</h6>
         <p>Cleanliness: {{ cafe.ratings.cleanliness }}</p>
         <p>Coffee: {{ cafe.ratings.coffee }}</p>
         <p>Food: {{ cafe.ratings.food }}</p>
@@ -32,12 +32,12 @@
     </div>
     <div class="posts">
       <div class="post-header">
-        <h5>{{ cafe.posts.date }}</h5>
+        <h6>{{ cafe.posts.date }}</h6>
         <p>Rating this visit: {{ cafe.posts.visitRating }}</p>
       </div>
       <div class="post-order">
         <p>Ordered:</p>
-        <h5>{{ cafe.posts.order }}</h5>
+        <h6>{{ cafe.posts.order }}</h6>
       </div>
       <p class="post-content">{{ cafe.posts.textContent }}</p>
     </div>
@@ -46,7 +46,7 @@
 
 <script>
   export default {
-    name: 'Cafe',
+    name: 'EditCafe',
     props: {
       cafe: {
         name: '',
@@ -81,6 +81,7 @@
     },
     methods: {
       formatImageUrl(imgUrl) {
+        console.log(imgUrl);
         return require('../assets/' + imgUrl);
       }
     }
@@ -89,22 +90,43 @@
 
 <style scoped>
 
+  /* COLORS */
+  .city {
+    color: #51a26f;
+  }
   .ratings p, .post-header p {
-    color: var(--colorTextNeutral1);
+    color: #959595;
   }
   .cafe-header, .ratings, .post-order {
-    background-color: var(--bgNeutralLight);
+    background-color: #e0e0e0;
   }
 
-  .ratings p {
-    font-size: var(--textSize1);
+  /* FONT SIZES */
+  h4 {
+    font-size: 1.25rem;
   }
+  h6 {
+    font-size: 1.25rem;
+  }
+  p {
+    font-size: 1rem;
+  }
+  .cafe-header h2 {
+    font-size: 2rem;
+  }
+  .cafe-header h4 {
+    font-size: 1rem;
+  }
+  .ratings p {
+    font-size: 0.85rem;
+  }
+
 
   .cafe {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    margin: 0.25rem 0;
+    margin: auto;
   }
 
   .cafe-header {
@@ -112,11 +134,6 @@
     flex-direction: column;
     align-items: center;
     padding: 1rem 0;
-    opacity: 1;
-  }
-  .cafe-header:hover {
-    cursor: pointer;
-    opacity: 0.8;
   }
 
   .pics {

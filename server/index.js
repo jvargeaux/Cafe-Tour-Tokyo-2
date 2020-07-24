@@ -6,9 +6,11 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
 
 const app = express();
 
+dotenv.config();
 
 // Middleware
 app.use(cookieParser());
@@ -52,5 +54,6 @@ app.use(express.static(path.join(__dirname, '../client/dist/')));
 
 
 const port = process.env.PORT || 5000;
+console.log("mode:", process.env.NODE_ENV);
 
 app.listen(port, () => console.log(`Server running on port ${port}.`));

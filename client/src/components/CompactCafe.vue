@@ -1,25 +1,31 @@
 <template>
   <div class="compact-cafe">
     <div class="header">
-      <h4>{{ cafe.name }}</h4>
+      <h3>{{ cafe.name }}</h3>
       <h6>{{ cafe.city }}</h6>
     </div>
     <div class="rating">
       <p>Rating: {{ cafe.ratings.overall }}</p>
+      <StarRating v-bind:rating="cafe.ratings.overall" :star_size="18" />
       <p>{{ cafe.posts.date }}</p>
     </div>
     <div class="location">
       <p>{{ cafe.location.station }} Station</p>
       <p>{{ cafe.location.line }}</p>
+      <TrainLineIcon v-bind:line="cafe.location.line" />
     </div>
   </div>
 </template>
 
 <script>
+  import StarRating from './StarRating.vue';
+  import TrainLineIcon from './TrainLineIcon.vue';
+
   export default {
     name: 'CompactCafe',
     components: {
-
+      StarRating,
+      TrainLineIcon
     },
     props: {
       cafe: {
@@ -35,7 +41,8 @@
         posts: {
           date: String
         }
-      }
+      },
+      index: Number
     },
     data() {
       return {
@@ -46,26 +53,29 @@
 </script>
 
 <style scoped>
-  /* FONT SIZES */
-  h4 { font-size: 1.25rem;}
-  h6 { font-size: 0.75rem;}
-  p { font-size: 0.9rem;}
+
+  p { font-size: var(--textSize1);}
 
   .compact-cafe {
     display: flex;
     flex-direction: row;
-    padding: 1rem 1rem;
-    margin: 1rem 0;
-    background-color: #dfdfdf;
+    padding: 2rem 1.5rem;
+    margin: 0.25rem 0;
+    background-color: var(--bgNeutralLight);
+    opacity: 1;
+  }
+  .compact-cafe:hover {
+    opacity: 0.8;
+    cursor: pointer;
   }
   .header, .rating, .location {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 1rem;
+    margin: 0 1rem;
   }
   .header {
-    flex: 2;
+    flex: 1;
   }
   .rating, .location {
     flex: 1;
