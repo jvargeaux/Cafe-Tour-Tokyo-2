@@ -2,6 +2,7 @@
   <div class="nav">
     <div class="bgOverlay"></div>
     <div class="bg"></div>
+    <button @click="toggleLanguage">{{ this.$store.state.currentLanguage === 'en' ? '日本語' : 'English' }}</button>
     <div class="accountStatus" v-if="user">
       <h6>Welcome, {{ user.name }}</h6>
       <button v-on:click="logout">Logout</button>
@@ -12,9 +13,9 @@
     <a href="./"><h1>Cafe Tour Tokyo</h1></a>
     <nav>
       <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/about">About</router-link></li>
-        <li><router-link to="/list">Cafe List</router-link></li>
+        <li><router-link to="/">{{ locale('home') }}</router-link></li>
+        <li><router-link to="/about">{{ locale('about') }}</router-link></li>
+        <li><router-link to="/list">{{ locale('cafe list') }}</router-link></li>
         <!-- <li><router-link to="/map">Map</router-link></li> -->
         <li v-if="user && user.email === 'fakeAdmin@gmail.com'"><router-link to="/api">API</router-link></li>
         <li v-if="user"><router-link to="/profile">Profile</router-link></li>
@@ -59,6 +60,10 @@
       logout: function() {
         document.cookie = null;
         location.reload();
+      },
+      toggleLanguage: function() {
+        let newLanguage = this.$store.state.currentLanguage === 'en' ? 'jp' : 'en';
+        this.$store.commit('changeLanguage', newLanguage);
       }
     },
     mounted() {
@@ -87,7 +92,7 @@
     width: 100vw;
     height: 40vh;
     /* background-color: rgba(12,121,61,.6); */
-    background: linear-gradient(0deg, rgba(8,154,74,.4), rgba(22,83,49,.6));
+    background: linear-gradient(0deg, rgba(108,255,157,.5), rgba(0,61,20,.9));
     z-index: -80;
   }
 
@@ -166,9 +171,9 @@
 
   nav ul li a {
     color: #fff;
-    font-size: 18px;
+    font-size: var(--textSize2);
     font-weight: 500;
-    padding: 12px 36px;
+    padding: 1rem 2rem;
     background-color: rgba(24,24,24,.65);
     transition: color 0.25s, background 0.25s;
   }

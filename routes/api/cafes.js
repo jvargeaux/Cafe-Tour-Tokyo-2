@@ -18,6 +18,13 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+
+  // Authenticate user
+  // We don't want just anyone updating our precious cafes
+
+  let id = req.body._id;
+  console.log(id);
+
   const newCafe = new Cafe({
     name: req.body.name,
     city: req.body.city,
@@ -39,17 +46,79 @@ router.post('/', (req, res) => {
       line: req.body.location.line,
       minsFromStation: req.body.location.minsFromStation
     },
-    posts: {
-      date: req.body.posts.date,
-      visitRating: req.body.posts.visitRating,
-      order: req.body.posts.order,
-      textContent: req.body.posts.textContent
-    }
+    imageUrls: req.body.imageUrls,
+    visits: req.body.visits
   });
 
-  newCafe.save()
-    .then(cafe => res.json(cafe))
+  if (id) {
+    console.log("Replacing cafe.");
+
+    Cafe.findOne({ _id: id }, (err, obj) => {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        newCafe._id = id;
+        Cafe.replaceOne({ _id: id }, newCafe )
+          .then(cafe => {
+            console.log("Replaced cafe:");
+            console.log(newCafe);
+            res.status(204).json(cafe);
+          })
+          .catch(err => console.log(err));
+      }
+    })
+      .catch(err => console.log(err));
+  }
+  else {
+    console.log("Creating new cafe.");
+
+    newCafe.save()
+    .then(cafe => {
+      console.log("Saved new cafe:");
+      console.log(newCafe);
+      res.status(201).json(cafe);
+    })
     .catch(err => console.log(err));
+  }
+
+})
+
+router.delete('/', (req, res) => {
+
+  // Authenticate user
+  // We don't want just anyone updating our precious cafes
+
+  let id = req.body._id;
+  console.log(id);
+
+  if (id) {
+    console.log("Deleting cafe.");
+
+    Cafe.findOne({ _id: id }, (err, obj) => {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        Cafe.deleteOne({ _id: id }, (err) => {
+          if (err) {
+            console.log(err);
+          }
+          else {
+            console.log("Deleted cafe with ID: " + id);
+            res.status(202).json(id);
+          }
+        })
+          .catch(err => console.log(err));
+      }
+    })
+      .catch(err => console.log(err));
+  }
+  else {
+    console.log("Didn't find ID. Can't delete.");
+    res.status(400).json(id);
+  }
+
 })
 
 module.exports = router;

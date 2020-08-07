@@ -1,7 +1,7 @@
 <template>
   <div class="blog">
     <p id="output"></p>
-    <h1>Blog</h1>
+    <h1>Articles</h1>
     <div class="postContainer"
     v-for="(post, index) in this.$store.state.posts"
     :key="index">
@@ -23,7 +23,6 @@
 
 <style scoped>
   .blog {
-    padding: 5vh 8vw;
     display: flex;
     flex-direction: column;
     justify-content: center;

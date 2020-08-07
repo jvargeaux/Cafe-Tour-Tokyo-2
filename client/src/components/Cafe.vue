@@ -26,20 +26,24 @@
       </div>
       <div class="location">
         <p>{{ cafe.location.station }} Station</p>
-        <p>{{ cafe.location.line }}</p>
+        <p>{{ formatTrainLineText(cafe.location.line) }} Line</p>
         <p>{{ cafe.location.minsFromStation }} min walk</p>
       </div>
     </div>
-    <div class="posts">
-      <div class="post-header">
-        <h5>{{ cafe.posts.date }}</h5>
-        <p>Rating this visit: {{ cafe.posts.visitRating }}</p>
+    <div class="visits">
+      <div class="visit-item"
+      v-for="(visit, index) in cafe.visits"
+      :key="index">
+        <div class="visit-header">
+          <h5>{{ visit.date }}</h5>
+          <p>Rating this visit: {{ visit.rating }}</p>
+        </div>
+        <div class="visit-order">
+          <p>Ordered:</p>
+          <h5>{{ visit.order }}</h5>
+        </div>
+        <p class="visit-content">{{ visit.textContent }}</p>
       </div>
-      <div class="post-order">
-        <p>Ordered:</p>
-        <h5>{{ cafe.posts.order }}</h5>
-      </div>
-      <p class="post-content">{{ cafe.posts.textContent }}</p>
     </div>
   </div>
 </template>
@@ -82,6 +86,21 @@
     methods: {
       formatImageUrl(imgUrl) {
         return require('../assets/' + imgUrl);
+      },
+      formatTrainLineText: function(trainLineID) {
+        if (!trainLineID) return;
+
+        let lineName = trainLineID.split('_')[1];
+        if (!lineName) return;
+
+        let firstLetter = lineName[0];
+        let returnString = '';
+        if (trainLineID.includes('seibu_')) {
+          returnString += 'Seibu ';
+        }
+        returnString += lineName.replace(firstLetter, firstLetter.toUpperCase());
+
+        return returnString;
       }
     }
   }
@@ -93,7 +112,7 @@
     color: var(--colorTextNeutral1);
   }
   .cafe-header, .ratings, .post-order {
-    background-color: var(--bgNeutralLight);
+    background-color: var(--colorNeutralLight);
   }
 
   .ratings p {
@@ -147,20 +166,20 @@
     padding: 1rem 2rem;
   }
 
-  .posts {
+  .visits {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     margin: 2rem 1rem;
   }
-  .post-header {
+  .visit-header {
     flex: 3;
   }
-  .post-order {
+  .visit-order {
     flex: 1 1 1;
     padding: 1rem 2rem;
   }
-  .post-content {
+  .visit-content {
     flex: 1 1 100vw;
   }
 

@@ -34,13 +34,16 @@ const CafeSchema = new Schema({
       minsFromStation: Number
     }
   },
-  posts: {
-    type: {
+  imageUrls: {
+    type: [String]
+  },
+  visits: {
+    type: [{
       date: String,
-      visitRating: Number,
+      rating: Number,
       order: String,
       textContent: String
-    }
+    }]
   }
 });
 

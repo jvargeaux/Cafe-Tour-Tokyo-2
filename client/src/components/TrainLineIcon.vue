@@ -12,6 +12,7 @@
     },
     methods: {
       formatIconUrl: function(iconUrl) {
+        if (!iconUrl) return '';
         return require('../assets/train_line_icons/' + iconUrl + '.svg');
       }
     }
@@ -26,6 +27,6 @@
     align-items: center;
   }
   .train-icon {
-    width: 28px;
+    width: 32px;
   }
 </style>

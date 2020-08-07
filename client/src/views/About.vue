@@ -13,8 +13,6 @@
 
 <style scoped>
   .about {
-    padding: 5vh 10vw;
-    padding-bottom: 12vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

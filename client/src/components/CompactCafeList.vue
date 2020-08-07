@@ -3,8 +3,7 @@
     <p id="output"></p>
     <div class="cafeItem"
     v-for="(cafe, index) in this.$store.state.cafes"
-    :key="index"
-    >
+    :key="index">
       <Cafe v-if="expanded === index" v-bind:cafe="cafe" v-on:toggle-expand="toggleExpand(index)" />
       <div v-else v-on:click.capture="toggleExpand(index)">
         <CompactCafe v-bind:cafe="cafe" />

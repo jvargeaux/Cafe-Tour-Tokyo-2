@@ -22,8 +22,7 @@
 
 <style scoped>
   .cafeList {
-    max-width: 1000px;
+    max-width: 800px;
     margin: auto;
-    padding: 3rem 6vw;
   }
 </style>

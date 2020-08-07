@@ -81,73 +81,130 @@
 </script>
 
 <style>
-@import 'https://fonts.googleapis.com/css?family=Julius+Sans+One&display=swap';
 
-:root {
-  --bgGradientLight: linear-gradient(45deg, #d5d5d5, #fff);
-  --bgGradientDark: linear-gradient(45deg, #24252b, #181a21);
-  --bgNeutralLight: #f0f0f0;
+  /* 003D14 - Forest Green Traditional */
 
-  --colorTextNeutral1: #9a9a9a;
-  --colorTextAccent1: #15c36b;
+  :root {
 
-  --textSize1: 0.9rem;
-  --textSize2: 1rem;
-  --textSize3: 1.1rem;
-  --textSize4: 1.75rem;
-}
+    /* COLORS */
+    --colorPalette1: #6cff9d;  /* Spring Green */
+    --colorPalette1Dark: #003d14;  /* Forest Green Traditional */
+    --colorPalette1a: #00b83d;  /* Dark Pastel Green */
+    --colorPalette2: #f2f7ff;  /* Alice Blue (White) */
+    --colorPalette3: #393b6d;  /* Dark Slate Blue */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-html {
-  background: var(--bgGradientDark);
-  background-repeat: no-repeat;
-  min-height: 100vh;
-}
-body {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #474747;
-}
+    --colorNeutralLight: #f0f0f0;
 
-h1 {
-  font-family: 'Julius Sans One', sans-serif;
-  text-align: center;
-  margin-bottom: 6vh;
-}
-h2 {
-  font-size: var(--textSize4);
-}
-h3 {
-  font-size: var(--textSize3);
-}
-h4 {
-  font-size: var(--textSize2);
-  color: var(--colorTextAccent1);
-}
-h5 {
-  font-size: var(--textSize3);
-}
-h6 {
-  font-size: var(--textSize1);
-}
-p {
-  font-size: var(--textSize2);
-}
+    --appBG: #202020;
 
-a {
-  text-decoration: none;
-}
+    --colorTextNeutral1: #9a9a9a;
+    --colorTextAccent1: #15c36b;
 
-a.router-link-exact-active {
-  /* color: #42b983; */
-}
+    /* TEXT */
+    --textSize1: 0.95rem;
+    --textSize2: 1rem;
+    --textSize3: 1.25rem;
+    --textSize4: 1.75rem;
 
-.router {
-  background: #fff;
-}
+    /* TRANSITIONS */
+    --fadeTime1: 0.15s;
+    --fadeTime2: 0.3s;
+
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none !important;
+  }
+  html {
+    background: var(--appBG);
+    min-height: 100vh;
+    font-size: 16px;
+  }
+  body {
+    font-family: 'Mulish', 'Avenir', sans-serif;
+    font-weight: 300;
+    /* 200, 300. 400. 600 */
+    line-height: 1.5rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1 {
+    font-family: 'Julius Sans One', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 6vh;
+  }
+  h2 {
+    font-size: var(--textSize4);
+    margin-bottom: 0.5rem;
+  }
+  h3 {
+    font-size: var(--textSize3);
+  }
+  h4 {
+    font-size: var(--textSize2);
+    color: var(--colorTextAccent1);
+  }
+  h5 {
+    font-size: var(--textSize3);
+    font-weight: 500;
+  }
+  h6 {
+    font-size: var(--textSize1);
+  }
+  p {
+    font-size: var(--textSize2);
+  }
+  a {
+    text-decoration: none;
+  }
+  a.router-link-exact-active {
+    /* color: #42b983; */
+  }
+
+  button {
+    height: 3rem;
+    width: 6rem;
+    margin: 0 2vw;
+    outline: none;
+    background-color: #616161;
+    color: #fff;
+    border: none;
+    font-size: 0.75rem;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #49bd88;
+  }
+
+  input[type="text"], input[type="number"], input[type="date"],
+  textarea, select, span {
+    font-family: 'Mulish', 'Avenir', sans-serif;
+  }
+
+  input[type="text"] {
+    min-width: 240px;
+  }
+
+  input[type="number"] {
+    max-width: 80px;
+  }
+
+  textarea {
+    min-width: 240px;
+    min-height: 80px;
+  }
+
+  .router {
+    background: #fff;
+    padding-top: 60px;
+    padding-bottom: 120px;
+    padding-left: 10vw;
+    padding-right: 10vw;
+  }
+
 </style>
