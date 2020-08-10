@@ -55,12 +55,16 @@
         <span class="edit-label edit-item-left">Station:</span>
         <input class="edit-item-right" type="text" :value="cafe.location.station" @input="changeStation" />
         <span class="edit-label edit-item-left">Line:</span>
-        <select class="edit-item-right" id="trainLine" name="trainLine" @change="changeLine">
+        <input class="edit-item-right" type="text" :value="cafe.location.line" @input="changeLine" />
+        <!-- <select class="edit-item-right" id="trainLine" name="trainLine" :value="cafe.location.line" @change="changeLine">
           <option value=""></option>
           <option value="jr_yamanote">JR Yamanote</option>
           <option value="jr_chuo">JR Chuo</option>
           <option value="seibu_shinjuku">Seibu Shinjuku</option>
-        </select>
+          <option value="metro_hibiya">Metro Hibiya</option>
+          <option value="metro_ginza">Metro Ginza</option>
+          <option value="metro_hanzomon">Metro Hanzomon</option>
+        </select> -->
         <span class="edit-label edit-item-left">Mins From Station:</span>
         <input class="edit-item-right" type="number" min="0" :value="cafe.location.minsFromStation" @input="changeMinsFromStation" />
     </div>
@@ -131,11 +135,11 @@
         },
         location: {
           station: String,
-          line: String,
+          line: Array,
           minsFromStation: 0
         },
         visits: [],
-        imageUrls: [String]
+        imageUrls: Array
         // last visit
       }
     },
@@ -186,14 +190,7 @@
         this.cafe.location.minsFromStation = event.target.value;
       },
       changeImageUrls() {
-        let input = event.target.value;
-        console.log(input);
-        if (!input) this.cafe.imageUrls = null;
-        else {
-          let imageUrlArray = input.split(',');
-          console.log("imageUrlArray", imageUrlArray);
-          this.cafe.imageUrls = imageUrlArray;
-        }
+        this.cafe.imageUrls = event.target.value;
       },
 
       selectVisitToEdit(index) {
@@ -214,11 +211,21 @@
       saveCafe() {
         console.log("saving...");
 
-        // Remove spaces from image urls
-        if (this.cafe.imageUrls) {
-          this.cafe.imageUrls.forEach((url, i) => {
-            this.cafe.imageUrls[i] = url.trim();
+        // Make array and remove spaces from image urls
+        if (!this.cafe.imageUrls) {
+          let imageUrlArray = input.split(',');
+          imageUrlArray.forEach((url, i) => {
+            imageUrlArray[i] = url.trim();
           });
+          this.cafe.imageUrls = imageUrlArray;
+        }
+        // Make array and remove spaces from train lines
+        if (!this.cafe.location.line) {
+          let lineArray = input.split(',');
+          lineArray.forEach((line, i) => {
+            lineArray[i] = line.trim();
+          });
+          this.cafe.location.line = lineArray;
         }
 
         this.$emit('save-cafe', this.cafe);

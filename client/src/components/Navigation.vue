@@ -68,6 +68,7 @@
     },
     mounted() {
       this.checkLoginStatus();
+      console.log(this.user);
     }
   }
 </script>

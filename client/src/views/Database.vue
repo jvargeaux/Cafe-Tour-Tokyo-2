@@ -176,10 +176,10 @@
               }
               document.getElementById("output").innerHTML = output;
 
-              this.resetNewCafe();
               // Successfully saved data, so clear store and local storage object
               localStorage.removeItem('editingCafe');
               this.loadCafes();
+              this.resetNewCafe();
               this.currentView = 'cafes';
             });
           }
@@ -216,8 +216,8 @@
               let output = 'Cafe deleted, ID: ' + id;
               document.getElementById("output").innerHTML = output;
 
-              this.resetNewCafe();
               this.loadCafes();
+              this.resetNewCafe();
               this.currentView = 'cafes';
             });
           }

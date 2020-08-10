@@ -1,6 +1,6 @@
 <template>
   <div class="compact-cafe"
-      :style="this.coverImageUrl ? `background-image: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)), url(${this.coverImageUrl})`
+      :style="this.coverImage ? `background-image: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)), url(${coverImageAssetPath})`
               : 'background-color: var(--colorPalette3)'">
     <div class="header">
       <h3>{{ cafe.name }}</h3>
@@ -10,13 +10,12 @@
       <StarRating v-bind:rating="cafe.ratings.overall" :star_size="18" />
     </div>
     <div class="location">
-      <p>{{ cafe.location.station }} Station</p>
+      <p>{{ formatStationAndWalkTime }}</p>
       <div class="train-line-container">
         <TrainLineIcon class="train-line-icon" v-bind:line="cafe.location.line" />
-        <p>{{ formatTrainLineText(cafe.location.line) }} Line</p>
+        <p>{{ formatTrainLineText(cafe.location.line) }}</p>
       </div>
     </div>
-    <div class="compact-cafe-bg-overlay"></div>
   </div>
 </template>
 
@@ -31,22 +30,35 @@
       TrainLineIcon
     },
     props: {
+      coverImage: String,
       cafe: {
         name: String,
         city: String,
         ratings: {
-          overall: 0
+          overall: Number
         },
         location : {
           station: String,
           line: String
         },
-        imageUrls: [String],
+        imageUrls: Array,
         visits: {
           date: String
         }
       },
       index: Number
+    },
+    computed: {
+      coverImageAssetPath() {
+        return require('../assets/' + this.coverImage);
+      },
+      formatStationAndWalkTime() {
+        let output = '';
+        if (this.cafe.location.minsFromStation) output += `${this.cafe.location.minsFromStation}m`;
+        if (this.cafe.location.minsFromStation && this.cafe.location.station) output += ' from ';
+        if (this.cafe.location.station) output += `${this.cafe.location.station} Station`;
+        return output;
+      }
     },
     methods: {
       formatTrainLineText: function(trainLineID) {
@@ -60,21 +72,10 @@
         if (trainLineID.includes('seibu_')) {
           returnString += 'Seibu ';
         }
-        returnString += lineName.replace(firstLetter, firstLetter.toUpperCase());
+        returnString += `${lineName.replace(firstLetter, firstLetter.toUpperCase())} Line`;
 
         return returnString;
       }
-    },
-    data() {
-      return {
-        coverImageUrl: null
-      }
-    },
-    mounted() {
-      if (!this.cafe.imageUrls) return;
-      let imageUrl = require('../assets/' + this.cafe.imageUrls[0]);
-      if (!imageUrl) this.coverImageUrl = null;
-      else this.coverImageUrl = imageUrl;
     }
   }
 </script>
@@ -130,9 +131,6 @@
   }
   .train-line-icon {
     margin-right: 0.75rem;
-  }
-  .compact-cafe-bg-overlay {
-    background-color: #955f89;
   }
 
 </style>

@@ -52,35 +52,35 @@
   export default {
     name: 'Cafe',
     props: {
+      index: Number,
       cafe: {
-        name: '',
-        city: '',
+        name: String,
+        city: String,
         ratings: {
-          overall: 0,
-          cleanliness: 0,
-          coffee: 0,
-          food: 0,
-          usability: 0,
-          price: 0
+          overall: Number,
+          cleanliness: Number,
+          coffee: Number,
+          food: Number,
+          usability: Number,
+          price: Number
         },
         features: {
-          wifi: false,
-          seats: 0,
-          water: false
+          wifi: Boolean,
+          seats: Number,
+          water: Boolean
         },
         location: {
-          station: '',
-          line: '',
-          minsFromStation: 0
+          station: String,
+          line: String,
+          minsFromStation: Number
         },
         posts: {
-          date: '',
-          visitRating: 0,
-          order: '',
-          textContent: ''
+          date: String,
+          visitRating: Number,
+          order: String,
+          textContent: String
         },
-        imageUrls: ['']
-        // last visit
+        imageUrls: Array
       }
     },
     methods: {

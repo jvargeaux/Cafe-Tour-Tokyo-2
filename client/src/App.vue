@@ -167,14 +167,14 @@
   }
 
   button {
-    height: 3rem;
-    width: 6rem;
-    margin: 0 2vw;
+    margin: 1rem;
+    padding: 0;
     outline: none;
     background-color: #616161;
     color: #fff;
     border: none;
     font-size: 0.75rem;
+    line-height: 100%;
   }
   button:hover {
     cursor: pointer;
