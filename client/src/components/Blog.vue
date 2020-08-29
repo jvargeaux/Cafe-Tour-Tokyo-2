@@ -1,13 +1,10 @@
 <template>
-  <div class="blog">
-    <p id="output"></p>
+  <section>
     <h1>Articles</h1>
-    <div class="postContainer"
-    v-for="(post, index) in this.$store.state.posts"
-    :key="index">
-      <Post v-bind:post="post" />
-    </div>
-  </div>
+    <Post v-for="(post, index) in this.$store.state.posts"
+      v-bind:post="post"
+      :key="index" />
+  </section>
 </template>
 
 <script>
@@ -22,13 +19,13 @@
 </script>
 
 <style scoped>
-  .blog {
+
+  section {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 900px;
   }
-  .postContainer {
-    max-width: 1000px;
-  }
+
 </style>

@@ -15,7 +15,7 @@
 
 <style scoped>
   .footer {
-    height: 600px;
+    height: 100px;
     background: var(--appBG);
   }
 </style>

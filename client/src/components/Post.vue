@@ -1,12 +1,12 @@
 <template>
-  <div class="post">
+  <article>
     <div class="post-header">
-      <h3 class="post-title">{{post.title}}</h3>
-      <h5 class="post-location">{{post.location}}</h5>
+      <h3>{{post.title}}</h3>
+      <h5>{{post.location}}</h5>
     </div>
-    <h6 class="post-date">{{post.date}}</h6>
-    <p class="post-content">{{post.content}}</p>
-  </div>
+    <h6>{{post.date}}</h6>
+    <p>{{post.content}}</p>
+  </article>
 </template>
 
 <script>
@@ -24,43 +24,22 @@
 </script>
 
 <style scoped>
-  .post {
+
+  article {
     display: flex;
     flex-direction: column;
-    color: #e8e8e8;
-    padding-bottom: 120px;
+    padding-bottom: 3rem;
   }
+
   .post-header {
     display: flex;
     flex-direction: row;
     align-items: baseline;
-    padding-bottom: 20px;
-  }
-  .post-title {
-    flex: 4;
-  }
-  .post-location {
-    flex: 1;
-  }
-  .post-date {
-  }
-  .post-content {
-    padding-top: 40px;
+    padding-bottom: 1.5rem;
   }
 
-  h3 { /* Title */
-    color: #282828;
-    font-size: 24px;
+  p {
+    color: var(--textColorNeutral3);
   }
-  h5 { /* Location */
-    color: #51a26f;
-    font-size: 18px;
-  }
-  h6 { /* Date */
-    color: #afafaf;
-    font-size: 16px;
-  }
-  p { /* Content */
-    color: #5d5d5d;
-  }
+
 </style>

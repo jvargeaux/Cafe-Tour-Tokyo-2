@@ -25,9 +25,13 @@ router.post('/', (req, res) => {
   let id = req.body._id;
   console.log(id);
 
+  const name = req.body.name;
+
   const newCafe = new Cafe({
     name: req.body.name,
     city: req.body.city,
+    spot: req.body.spot,
+    description: req.body.description,
     ratings: {
       overall: req.body.ratings.overall,
       cleanliness: req.body.ratings.cleanliness,
@@ -39,13 +43,10 @@ router.post('/', (req, res) => {
     features: {
       wifi: req.body.features.wifi,
       seats: req.body.features.seats,
-      water: req.body.features.water
+      water: req.body.features.water,
+      outlets: req.body.features.outlets
     },
-    location: {
-      station: req.body.location.station,
-      line: req.body.location.line,
-      minsFromStation: req.body.location.minsFromStation
-    },
+    locations: req.body.locations,
     imageUrls: req.body.imageUrls,
     visits: req.body.visits
   });
@@ -63,7 +64,7 @@ router.post('/', (req, res) => {
           .then(cafe => {
             console.log("Replaced cafe:");
             console.log(newCafe);
-            res.status(204).json(cafe);
+            res.status(200).json(obj);
           })
           .catch(err => console.log(err));
       }

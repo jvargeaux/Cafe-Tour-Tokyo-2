@@ -103,10 +103,10 @@
     height: 100%;
     z-index: 9;
   }
-  .star {
+  /* .star {
     fill: #eebf49;
   }
   .star-empty {
     fill: rgba(0,0,0,.12);
-  }
+  } */
 </style>

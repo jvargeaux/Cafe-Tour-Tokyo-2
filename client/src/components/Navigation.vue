@@ -1,28 +1,33 @@
 <template>
-  <div class="nav">
+  <div class="component-wrapper">
     <div class="bgOverlay"></div>
     <div class="bg"></div>
-    <button @click="toggleLanguage">{{ this.$store.state.currentLanguage === 'en' ? '日本語' : 'English' }}</button>
-    <div class="accountStatus" v-if="user">
-      <h6>Welcome, {{ user.name }}</h6>
-      <button v-on:click="logout">Logout</button>
-    </div>
-    <div class="accountStatus" v-else>
-      <h6><a class="textLink" href=".#/login">Login</a> or <a class="textLink" href=".#/register">Create An Account</a></h6>
-    </div>
+    <section class="headerBar">
+      <div>
+        <button @click="toggleLanguage">{{ this.$store.state.currentLanguage === 'en' ? '日本語' : 'English' }}</button>
+        <button @click="toggleDarkMode">{{ this.$store.state.darkMode ? 'Light Mode' : 'Dark Mode' }}</button>
+      </div>
+      <div class="accountStatus" v-if="user">
+        <h6>Welcome, {{ user.name }}</h6>
+        <button v-on:click="logout">Logout</button>
+      </div>
+      <div class="accountStatus" v-else>
+        <h6><a class="textLink" href=".#/login">Login</a> or <a class="textLink" href=".#/register">Create An Account</a></h6>
+      </div>
+    </section>
     <a href="./"><h1>Cafe Tour Tokyo</h1></a>
-    <nav>
-      <ul>
-        <li><router-link to="/">{{ locale('home') }}</router-link></li>
-        <li><router-link to="/about">{{ locale('about') }}</router-link></li>
-        <li><router-link to="/list">{{ locale('cafe list') }}</router-link></li>
-        <!-- <li><router-link to="/map">Map</router-link></li> -->
-        <li v-if="user && user.email === 'fakeAdmin@gmail.com'"><router-link to="/api">API</router-link></li>
-        <li v-if="user"><router-link to="/profile">Profile</router-link></li>
-        <li v-if="user && user.email === 'jvargeaux@gmail.com'"><router-link to="/database">Database</router-link></li>
-        <!-- <li><router-link to="/login">Login</router-link></li> -->
-      </ul>
-    </nav>
+    <div class="nav-wrapper">
+      <section class="nav-container">
+        <nav>
+          <router-link to="/">{{ locale('home') }}</router-link>
+          <router-link to="/about">{{ locale('about') }}</router-link>
+          <router-link to="/cafelist">{{ locale('cafe list') }}</router-link>
+          <router-link v-if="user && user.email === 'fakeAdmin@gmail.com'" to="/api">API</router-link>
+          <router-link v-if="user" to="/profile">Profile</router-link>
+          <router-link v-if="user && user.email === 'jvargeaux@gmail.com'" to="/database">Database</router-link>
+        </nav>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -36,9 +41,9 @@
     props: {
 
     },
-    data() {
-      return {
-        user: null
+    computed: {
+      user() {
+        return this.$store.state.user
       }
     },
     methods: {
@@ -52,8 +57,7 @@
         })
          .then(res => res.json())
          .then(data => {
-           console.log(data);
-           this.user = data;
+           this.$store.commit('updateUser', data);
          })
          .catch(err => console.log(err));
       },
@@ -64,46 +68,67 @@
       toggleLanguage: function() {
         let newLanguage = this.$store.state.currentLanguage === 'en' ? 'jp' : 'en';
         this.$store.commit('changeLanguage', newLanguage);
+      },
+      toggleDarkMode: function() {
+        this.$store.commit('toggleDarkMode');
       }
     },
     mounted() {
-      this.checkLoginStatus();
-      console.log(this.user);
+      if (!this.$store.state.user) {
+        this.checkLoginStatus();
+      }
     }
   }
 </script>
 
 <style scoped>
 
-  .nav {
+  .component-wrapper {
+    position: relative;
     width: 100vw;
+    min-width: 320px;
+    height: var(--navigationHeight);
+    transition: height 0.3s;
   }
+
   .bg {
     position: absolute;
-    width: 100vw;
-    height: 40vh;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 300px;
     background-image: url("../assets/cafe1.jpg");
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-size: cover;
     z-index: -99;
   }
+
   .bgOverlay {
     position: absolute;
-    width: 100vw;
-    height: 40vh;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 300px;
     /* background-color: rgba(12,121,61,.6); */
     background: linear-gradient(0deg, rgba(108,255,157,.5), rgba(0,61,20,.9));
     z-index: -80;
   }
 
-  .accountStatus {
-    position: absolute;
+  .headerBar {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
+    /* max-width: 100vw; */
+  }
+
+  .accountStatus {
+    position: relative;
+    display: flex;
+    flex-direction: row;
     justify-content: flex-end;
-    right: 5vw;
-    top: 1vh;
+    align-items: center;
   }
 
   .textLink {
@@ -113,20 +138,35 @@
     color: rgba(255,255,255,1);
   }
 
+  h1 {
+    margin: 0;
+    padding: 3rem 0.5rem;
+    color: #355353;
+    font-family: 'Catamaran', sans-serif;
+    font-size: 6rem;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1em;
+    mix-blend-mode: color-dodge;
+    transition: all 0.3s;
+  }
+  h1:hover {
+    opacity: 0.7;
+  }
+
   h6 {
     text-align: center;
-    margin-right: 2vw;
+    margin-right: 1rem;
     font-size: 1.15rem;
     font-weight: 500;
     color: rgba(255,255,255,.75);
     text-shadow: 0px 0px 15px rgba(0,0,0,1);
     cursor: default;
   }
+
   button {
     outline: none;
     border: none;
-    height: 2.5rem;
-    width: 7rem;
     box-sizing: border-box;
     border: 1px solid #9f9f9f;
     border-radius: 6px;
@@ -134,7 +174,7 @@
     color: #b8b8b8;
     border: 1px solid #9f9f9f;
     background-color: rgba(0,0,0,.25);
-    transition: color 0.3s, background 0.3s, border 0.3s;
+    transition: all 0.3s;
   }
   button:hover {
     cursor: pointer;
@@ -143,47 +183,116 @@
     background-color: rgba(0,0,0,.5);
   }
 
-  h1 {
-    font-family: 'Julius Sans One', sans-serif;
-    font-size: 52px;
-    color: #fff;
-    text-shadow: 0px 0px 20px rgba(0,0,0,.5);
-    padding-top: 9vh;
-    text-align: center;
-    margin-bottom: 6vh;
-  }
-
   a {
     color: inherit;
   }
 
-  nav {
-    padding-bottom: 75px;
-  }
-
-  nav ul {
+  .nav-wrapper {
+    position: absolute;
+    top: var(--navigationHeight);
+    width: 100vw;
+    min-width: 320px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    transition: top 0.3s;
   }
 
-  nav ul li {
-    list-style-type: none;
+  .nav-container {
+    position: absolute;
+    transform: translate(0 -50%);
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background-color: var(--navigationBG);
+    /* box-shadow: 0 0 20px rgba(98,98,98,.25); */
+    border-radius: 6px;
   }
 
-  nav ul li a {
+  nav {
+    background-color: var(--navigationButtonColor);
+  }
+
+  nav a {
+    position: relative;
+    display: inline-block;
+    padding: 1rem 2rem;
     color: #fff;
     font-size: var(--textSize2);
     font-weight: 500;
-    padding: 1rem 2rem;
-    background-color: rgba(24,24,24,.65);
-    transition: color 0.25s, background 0.25s;
+    /* text-transform: uppercase; */
+    /* background-color: rgba(24,24,24,.65); */
+
+    /* I like this color */
+    /* background-color: #2a6e5c; */
+    /* background-color: #35335e; */
+    transition: all 0.25s;
   }
 
-  nav ul li a:hover {
-    color: #3d736c;
-    background-color: #f9f9f9;
+  nav a:hover {
+    /* color: #3d736c; */
+    color: #fff;
+    background-color: var(--navigationButtonColorHover);
+    box-shadow: 0 0 10px rgba(0,0,0,.25);
+    border-radius: 0.5rem;
     cursor: pointer;
   }
 
+
+  @media screen and (max-width: 900px) {
+    h1 {
+      font-size: 4rem;
+    }
+  }
+
+  @media screen and (max-width: 720px) {
+    .nav-container {
+      padding: 1rem;
+    }
+    nav a {
+      padding: 1rem 1.5rem;
+    }
+    .accountStatus h6 {
+      margin: 0;
+    }
+  }
+
+  @media screen and (max-width: 620px) {
+    .accountStatus h6 {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 580px) {
+    h1 {
+      font-size: 3rem;
+    }
+    /* .component-wrapper {
+      height: 240px;
+    }
+    .nav-wrapper {
+      top: 240px;
+    } */
+    .nav-container {
+      padding: 0;
+      background: 0;
+    }
+    nav {
+      border-radius: 0.5rem;
+    }
+    nav a {
+      padding: 0.65rem;
+      font-size: 0.75rem;
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    button {
+      margin: 0.5rem;
+      padding: 0.75rem 1rem;
+    }
+  }
 
 </style>

@@ -10,6 +10,12 @@ const CafeSchema = new Schema({
   city: {
     type: String
   },
+  spot: {
+    type: String
+  },
+  description: {
+    type: String
+  },
   ratings: {
     type: {
       overall: Number,
@@ -24,15 +30,16 @@ const CafeSchema = new Schema({
     type: {
       wifi: Boolean,
       seats: Number,
-      water: Boolean
+      water: Boolean,
+      outlets: Number
     }
   },
-  location: {
-    type: {
+  locations: {
+    type: [{
       station: String,
-      line: String,
+      lines: [String],
       minsFromStation: Number
-    }
+    }]
   },
   imageUrls: {
     type: [String]

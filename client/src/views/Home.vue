@@ -16,7 +16,9 @@
 </script>
 
 <style>
+
   .home {
     padding-bottom: 120px;
   }
+
 </style>

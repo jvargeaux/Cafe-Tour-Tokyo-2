@@ -1,5 +1,5 @@
 <template>
-  <div class="apiContainer">
+  <div class="component-wrapper">
     <div class="buttonContainer">
       <button v-on:click="showCafes">Edit Cafes</button>
       <button v-on:click="showPosts">Edit Posts</button>
@@ -75,6 +75,8 @@
           _id: null,
           name: null,
           city: null,
+          spot: null,
+          description: null,
           ratings: {
             overall: 0,
             cleanliness: 0,
@@ -86,21 +88,21 @@
           features: {
             wifi: false,
             seats: 0,
-            water: false
+            water: false,
+            outlets: 0
           },
-          location: {
+          locations: [{
             station: null,
-            line: null,
+            lines: null,
             minsFromStation: 0
-          },
+          }],
           visits: [{
-            date: '',
+            date: null,
             rating: 0,
-            order: '',
-            textContent: ''
+            order: null,
+            textContent: null
           }],
           imageUrls: []
-          // last visit
         },
         newVisit: {
           date: null,
@@ -149,8 +151,6 @@
       },
 
       saveCafe: function(cafe) {
-        console.log("cafe stringify", JSON.stringify(cafe));
-
         fetch(API_CAFES_URL, {
           method: "POST",
           headers: {
@@ -159,10 +159,10 @@
           },
           body: JSON.stringify(cafe)
         }).then(res => {
-          if (res.status === 204 || res.status === 201) {
+          if (res.status === 200 || res.status === 201) {
             res.json().then(data => {
               let output = '';
-              if (res.status === 204) {
+              if (res.status === 200) {
                 output = 'Cafe updated: ';
               }
               else if (res.status === 201) {
@@ -181,7 +181,8 @@
               this.loadCafes();
               this.resetNewCafe();
               this.currentView = 'cafes';
-            });
+            })
+            .catch(err => console.log(err));
           }
           else {
             console.log("Oops, database error...");
@@ -199,8 +200,6 @@
       },
 
       deleteCafe: function(cafe) {
-        console.log("cafe stringify", JSON.stringify(cafe));
-
         let cafeData = { _id: cafe._id }
 
         fetch(API_CAFES_URL, {
@@ -267,6 +266,8 @@
           _id: null,
           name: null,
           city: null,
+          spot: null,
+          description: null,
           ratings: {
             overall: 0,
             cleanliness: 0,
@@ -278,18 +279,19 @@
           features: {
             wifi: false,
             seats: 0,
-            water: false
+            water: false,
+            outlets: 0
           },
-          location: {
+          locations: [{
             station: null,
-            line: null,
+            lines: null,
             minsFromStation: 0
-          },
+          }],
           visits: [{
-            date: '2020-08-02',
-            rating: 4.5,
-            order: 'Latte',
-            textContent: 'This was a great visit. I really enjoyed it...'
+            date: null,
+            rating: 0,
+            order: null,
+            textContent: null
           }],
           imageUrls: []
           // last visit
@@ -305,13 +307,10 @@
       // Check if local storage object exists, and
       // use that first since it probably contains unsaved data
       let localStorageCafe = JSON.parse(localStorage.getItem('editingCafe'));
-      console.log("localStorage?", localStorageCafe);
       if (localStorageCafe) {
-        console.log("It exists!");
         this.$store.commit('updateEditingCafe', localStorageCafe);
       }
       else { // no local storage exists
-        console.log("store editingCafe", this.$store.state.editingCafe);
         if (!this.$store.state.editingCafe) this.resetNewCafe();
       }
     }
@@ -319,39 +318,34 @@
 </script>
 
 <style scoped>
+
+  .component-wrapper {
+    max-width: 900px;
+  }
+
   .databaseContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+
   .buttonContainer {
     display: flex;
     justify-content: center;
     margin-bottom: 4rem;
   }
-  button {
-    height: 3rem;
-    width: 6rem;
-    margin: 0 2vw;
-    outline: none;
-    background-color: #616161;
-    color: #fff;
-    border: none;
-    font-size: 0.75rem;
-  }
-  button:hover {
-    cursor: pointer;
-    background-color: #49bd88;
-  }
+
   li {
     position: relative;
     list-style: none;
   }
+
   .edit-cafe-button {
     position: absolute;
     top: 1rem;
     right: 0;
     z-index: 99;
   }
+
 </style>

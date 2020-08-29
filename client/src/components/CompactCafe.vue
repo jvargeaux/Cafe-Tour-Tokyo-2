@@ -1,21 +1,26 @@
 <template>
   <div class="compact-cafe"
-      :style="this.coverImage ? `background-image: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)), url(${coverImageAssetPath})`
+      :style="cafe.imageUrls && cafe.imageUrls.length ?
+              `background-image: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)), url(${assetPath(this.cafe.imageUrls[0])})`
               : 'background-color: var(--colorPalette3)'">
-    <div class="header">
+    <section class="header">
       <h3>{{ cafe.name }}</h3>
-      <h6>{{ cafe.city }}</h6>
-    </div>
-    <div class="rating">
+      <h4>{{ locale(cafe.city) }}</h4>
+      <h6>{{ cafe.spot }}</h6>
+    </section>
+    <section class="rating">
       <StarRating v-bind:rating="cafe.ratings.overall" :star_size="18" />
-    </div>
-    <div class="location">
-      <p>{{ formatStationAndWalkTime }}</p>
-      <div class="train-line-container">
-        <TrainLineIcon class="train-line-icon" v-bind:line="cafe.location.line" />
-        <p>{{ formatTrainLineText(cafe.location.line) }}</p>
+    </section>
+    <section class="locations-container">
+      <div class="location" v-for="location in cafe.locations">
+        <p>{{ formatStation(location.station) }}</p>
+        <h6>{{ formatMinsFromStation(location.minsFromStation) }}</h6>
+        <div class="train-lines">
+          <TrainLineIcon class="train-line-icon" v-for="line in location.lines" v-bind:line="line" />
+          <p>{{ formatTrainLineText(location.lines) }}</p>
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -32,50 +37,47 @@
     props: {
       coverImage: String,
       cafe: {
-        name: String,
-        city: String,
-        ratings: {
-          overall: Number
-        },
-        location : {
-          station: String,
-          line: String
-        },
-        imageUrls: Array,
-        visits: {
-          date: String
-        }
+        type: Object
       },
       index: Number
     },
-    computed: {
-      coverImageAssetPath() {
-        return require('../assets/' + this.coverImage);
-      },
-      formatStationAndWalkTime() {
-        let output = '';
-        if (this.cafe.location.minsFromStation) output += `${this.cafe.location.minsFromStation}m`;
-        if (this.cafe.location.minsFromStation && this.cafe.location.station) output += ' from ';
-        if (this.cafe.location.station) output += `${this.cafe.location.station} Station`;
-        return output;
-      }
-    },
     methods: {
-      formatTrainLineText: function(trainLineID) {
-        if (!trainLineID) return;
+      assetPath(url) {
+        return require('../assets/' + url);
+      },
+      formatTrainLineText: function(lines) {
+        if (!lines || !lines.length) return;
+        if (lines.length > 1) return '';
 
-        let lineName = trainLineID.split('_')[1];
-        if (!lineName) return;
-
-        let firstLetter = lineName[0];
-        let returnString = '';
-        if (trainLineID.includes('seibu_')) {
-          returnString += 'Seibu ';
+        if (this.$store.state.currentLanguage === 'jp') {
+          return `${this.locale(lines[0])}線`;
         }
-        returnString += `${lineName.replace(firstLetter, firstLetter.toUpperCase())} Line`;
+        else {
+          return `${this.locale(lines[0])} Line`;
+        }
 
-        return returnString;
+      },
+      formatStation(station) {
+        if (!station) return '';
+
+        if (this.$store.state.currentLanguage === 'jp') {
+          return `${this.locale(station)}駅`;
+        }
+        else {
+          return `${this.locale(station)} Station`;
+        }
+      },
+      formatMinsFromStation(mins) {
+        if (!mins) return '';
+
+        if (this.$store.state.currentLanguage === 'jp') {
+          return `歩${mins}分`;
+        }
+        else {
+          return `${mins}m`;
+        }
       }
+
     }
   }
 </script>
@@ -85,9 +87,15 @@
   h3 {
     color: #fff;
   }
-  h6 {
-    color: var(--colorTextAccent1);
+
+  h4 {
+    color: var(--textColorAccent);
   }
+
+  h6 {
+    color: rgba(255,255,255,.75);
+  }
+
   p {
     color: #fff;
     font-size: var(--textSize1);
@@ -96,12 +104,13 @@
   }
 
   .compact-cafe {
+    position: relative;
     display: grid;
-    grid-template-columns: 40% 25% 35%;
-    text-align: left;
+    grid-template-columns: 40% auto 40%;
     align-items: center;
+    width: 100%;
     padding: 2rem 1.5rem;
-    margin: 0.25rem 0;
+    margin-bottom: 0.5rem;
     opacity: 1;
     background-size: cover;
     background-position: center;
@@ -111,26 +120,79 @@
     opacity: 0.8;
     cursor: pointer;
   }
-  .header, .rating, .location {
+
+  section {
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin: 0 1rem;
   }
-  .header {
-    flex: 1;
+
+  .rating {
+    justify-self: center;
   }
-  .rating, .location {
-    flex: 1;
+
+  .locations-container {
+    text-align: right;
   }
-  .train-line-container {
+
+  .location {
+    margin-bottom: 0.75rem;
+  }
+
+  .location h6 {
+    display: inline;
+    margin-left: 0.5rem;
+    color: var(--textColorAccent);
+  }
+
+  .location p {
+    display: inline;
+  }
+
+  .train-lines {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: flex-end;
   }
+
+  .train-lines p {
+    font-weight: 300;
+    margin-left: 0.5rem;
+  }
+
   .train-line-icon {
-    margin-right: 0.75rem;
+    margin-left: 0.5rem;
+  }
+
+  @media screen and (max-width: 580px) {
+    .compact-cafe {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 0.5rem;
+    }
+    .header, .rating {
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .rating {
+      height: 100%;
+      justify-content: flex-start;
+    }
+    .locations-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    .locations-container > * {
+      margin: 0 1rem;
+    }
+    .train-lines {
+      justify-content: center;
+    }
   }
 
 </style>

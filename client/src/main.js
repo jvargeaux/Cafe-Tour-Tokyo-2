@@ -13,10 +13,16 @@ Vue.mixin({
   methods: {
     locale: function(string) {
       let localeString = this.$locale[string];
-      if (!localeString) return '(Locale Error: Not Found)';
+      if (!localeString) {
+        console.log('(Locale Error: Not Found)', string);
+        return string;
+      }
 
       let returnString = localeString[this.$store.getters.language];
-      if (!returnString) return '(Locale Error: Missing Language)';
+      if (!localeString) {
+        console.log('(Locale Error: Missing Language)', string);
+        return string;
+      }
       else return returnString;
     }
   }

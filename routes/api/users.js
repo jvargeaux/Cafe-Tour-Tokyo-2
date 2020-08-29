@@ -72,4 +72,41 @@ router.post('/', (req, res) => {
   }
 });
 
+// Update User
+router.put('/:id', (req, res) => {
+
+  console.log("Updating user...");
+
+  let id = req.params.id;
+  let favorites = req.body.favorites;
+
+  User.findOne({ _id: id }, (err, obj) => {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      let updatedUser = obj;
+      updatedUser.favorites = favorites;
+
+      User.replaceOne({ _id: id }, updatedUser )
+        .then(user => {
+          console.log("Replaced user:");
+          console.log(updatedUser);
+
+          let responseUser = {
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            favorites: updatedUser.favorites
+          }
+
+          res.status(200).json(responseUser);
+        })
+        .catch(err => console.log(err));
+    }
+  })
+    .catch(err => console.log(err));
+
+});
+
 module.exports = router;

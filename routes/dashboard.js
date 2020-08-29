@@ -31,8 +31,10 @@ router.get('/', verifyToken, (req, res) => {
       User.findOne({ email: authData.user.email }, (err, obj) => {
         if (obj) {
           const userInfo = {
+            _id: obj._id,
             name: obj.name,
-            email: obj.email
+            email: obj.email,
+            favorites: obj.favorites
           }
           res.status(200).json(userInfo);
         }

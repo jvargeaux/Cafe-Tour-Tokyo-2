@@ -13,7 +13,15 @@
     methods: {
       formatIconUrl: function(iconUrl) {
         if (!iconUrl) return '';
-        return require('../assets/train_line_icons/' + iconUrl + '.svg');
+
+        try {
+          let assetUrl = require('../assets/train_line_icons/' + iconUrl + '.svg');
+          return assetUrl;
+        }
+        catch (e) {
+          console.log(`Cannot find asset ${iconUrl}.`);
+          return;
+        }
       }
     }
   }
@@ -27,6 +35,6 @@
     align-items: center;
   }
   .train-icon {
-    width: 32px;
+    width: 28px;
   }
 </style>

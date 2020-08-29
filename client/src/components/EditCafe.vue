@@ -2,13 +2,17 @@
   <div class="edit-cafe">
     <h1 v-if="cafe._id">Edit Cafe</h1>
     <h1 v-else>New Cafe</h1>
-    <div class="edit-section">
+    <section>
       <span class="edit-label edit-item-left">Cafe Name:</span>
       <input class="edit-item-right" type="text" :value="cafe.name" @input="changeName" />
       <span class="edit-label edit-item-left">City:</span>
       <input class="edit-item-right" type="text" :value="cafe.city" @input="changeCity" />
-    </div>
-    <div class="edit-section">
+      <span class="edit-label edit-item-left">Spot:</span>
+      <input class="edit-item-right" type="text" :value="cafe.spot" @input="changeSpot" />
+      <span class="edit-label edit-item-left">Description:</span>
+      <textarea class="edit-item-right" :value="cafe.description" @input="changeDescription" />
+    </section>
+    <section>
       <h5 class="edit-section-title">Ratings</h5>
       <span class="edit-label edit-item-left">Overall:</span>
       <div class="edit-item-right rating-row">
@@ -40,38 +44,34 @@
         <EditStarRating :rating="cafe.ratings.price" :star_size="25" v-on:save-rating="savePriceRating" />
         <span class="edit-label">{{ cafe.ratings.price }}</span>
       </div>
-    </div>
-    <div class="edit-section">
+    </section>
+    <section>
       <h5 class="edit-section-title">Features</h5>
       <span class="edit-label edit-item-left">Seats:</span>
       <input class="edit-item-right" type="number" min="0" :value="cafe.features.seats" @input="changeSeats" />
       <span class="edit-label edit-item-left">Free Wifi:</span>
-      <input class="edit-item-right" type="checkbox" @click="toggleWifi" />
+      <input class="edit-item-right" type="checkbox" :checked="cafe.features.wifi" @click="toggleWifi" />
       <span class="edit-label edit-item-left">Free Water:</span>
-      <input class="edit-item-right" type="checkbox" @click="toggleWater" />
-    </div>
-    <div class="edit-section">
-      <h5 class="edit-section-title">Location</h5>
+      <input class="edit-item-right" type="checkbox" :checked="cafe.features.water" @click="toggleWater" />
+      <span class="edit-label edit-item-left">Outlets:</span>
+      <input class="edit-item-right" type="number" min="0" :value="cafe.features.outlets" @input="changeOutlets" />
+    </section>
+    <section class="locations">
+      <h5 class="edit-section-title">Locations</h5>
+      <section v-for="(location, index) in cafe.locations">
         <span class="edit-label edit-item-left">Station:</span>
-        <input class="edit-item-right" type="text" :value="cafe.location.station" @input="changeStation" />
-        <span class="edit-label edit-item-left">Line:</span>
-        <input class="edit-item-right" type="text" :value="cafe.location.line" @input="changeLine" />
-        <!-- <select class="edit-item-right" id="trainLine" name="trainLine" :value="cafe.location.line" @change="changeLine">
-          <option value=""></option>
-          <option value="jr_yamanote">JR Yamanote</option>
-          <option value="jr_chuo">JR Chuo</option>
-          <option value="seibu_shinjuku">Seibu Shinjuku</option>
-          <option value="metro_hibiya">Metro Hibiya</option>
-          <option value="metro_ginza">Metro Ginza</option>
-          <option value="metro_hanzomon">Metro Hanzomon</option>
-        </select> -->
+        <input class="edit-item-right" type="text" :value="location.station" @input="changeStation(index)" />
+        <span class="edit-label edit-item-left">Line(s):</span>
+        <input class="edit-item-right" type="text" :value="location.lines" @input="changeLines(index)" />
         <span class="edit-label edit-item-left">Mins From Station:</span>
-        <input class="edit-item-right" type="number" min="0" :value="cafe.location.minsFromStation" @input="changeMinsFromStation" />
-    </div>
-    <div class="edit-section">
+        <input class="edit-item-right" type="number" min="0" :value="location.minsFromStation" @input="changeMinsFromStation(index)" />
+      </section>
+      <button @click="addLocation">Add Location</button>
+    </section>
+    <section>
       <span class="edit-label edit-item-left">Image URLs:</span>
       <input class="edit-item-right" type="text" :value="cafe.imageUrls" @input="changeImageUrls" />
-    </div>
+    </section>
     <div class="visits">
       <h5 class="edit-section-title">Visits</h5>
       <div class="visit-item"
@@ -117,30 +117,7 @@
     },
     props: {
       cafe: {
-        _id: Number,
-        name: String,
-        city: String,
-        ratings: {
-          overall: 0,
-          cleanliness: 0,
-          coffee: 0,
-          food: 0,
-          usability: 0,
-          price: 0
-        },
-        features: {
-          wifi: false,
-          seats: 0,
-          water: false
-        },
-        location: {
-          station: String,
-          line: Array,
-          minsFromStation: 0
-        },
-        visits: [],
-        imageUrls: Array
-        // last visit
+        type: Object
       }
     },
     methods: {
@@ -149,6 +126,12 @@
       },
       changeCity() {
         this.cafe.city = event.target.value;
+      },
+      changeSpot() {
+        this.cafe.spot = event.target.value;
+      },
+      changeDescription() {
+        this.cafe.description = event.target.value;
       },
       formatImageUrl(imgUrl) {
         return require('../assets/' + imgUrl);
@@ -180,14 +163,31 @@
       changeSeats() {
         this.cafe.features.seats = event.target.value;
       },
-      changeStation() {
-        this.cafe.location.station = event.target.value;
+      changeOutlets() {
+        this.cafe.features.outlets = event.target.value;
       },
-      changeLine() {
-        this.cafe.location.line = event.target.value;
+      changeStation(index) {
+        this.cafe.locations[index].station = event.target.value;
       },
-      changeMinsFromStation() {
-        this.cafe.location.minsFromStation = event.target.value;
+      changeLines(index) {
+        this.cafe.locations[index].lines = event.target.value;
+      },
+      changeMinsFromStation(index) {
+        this.cafe.locations[index].minsFromStation = event.target.value;
+      },
+      addLocation() {
+        console.log(this.cafe.locations);
+        let newLocation = {
+          station: null,
+          lines: [],
+          minsFromStation: 0
+        }
+        if (!this.cafe.locations.length) {
+          this.cafe.locations = [newLocation];
+        }
+        else {
+          this.cafe.locations.push(newLocation);
+        }
       },
       changeImageUrls() {
         this.cafe.imageUrls = event.target.value;
@@ -209,23 +209,31 @@
         this.cafe.visits.push(newVisit);
       },
       saveCafe() {
-        console.log("saving...");
-
         // Make array and remove spaces from image urls
-        if (!this.cafe.imageUrls) {
-          let imageUrlArray = input.split(',');
+        if (this.cafe.imageUrls) {
+          let imageUrlArray = this.cafe.imageUrls;
+          if (!Array.isArray(imageUrlArray)) {
+            imageUrlArray = imageUrlArray.split(',');
+          }
           imageUrlArray.forEach((url, i) => {
             imageUrlArray[i] = url.trim();
           });
           this.cafe.imageUrls = imageUrlArray;
         }
         // Make array and remove spaces from train lines
-        if (!this.cafe.location.line) {
-          let lineArray = input.split(',');
-          lineArray.forEach((line, i) => {
-            lineArray[i] = line.trim();
+        if (this.cafe.locations) {
+          this.cafe.locations.forEach(location => {
+            if (location.lines) {
+              let lineArray = location.lines;
+              if (!Array.isArray(lineArray)) {
+                lineArray = lineArray.split(',');
+              }
+              lineArray.forEach((line, i) => {
+                lineArray[i] = line.trim();
+              });
+              location.lines = lineArray;
+            }
           });
-          this.cafe.location.line = lineArray;
         }
 
         this.$emit('save-cafe', this.cafe);
@@ -237,7 +245,6 @@
         this.askingDeleteConfirmation = false;
       },
       deleteCafe() {
-        console.log("deleting...");
         this.$emit('delete-cafe', this.cafe);
       }
     },
@@ -249,7 +256,7 @@
 
 <style scoped>
 
-  input[type="text"], input[type="number"] {
+  input[type="text"], input[type="number"], textarea {
     padding: 0.75rem;
     font-size: var(--textSize1);
     box-sizing: border-box;
@@ -257,10 +264,10 @@
     border-radius: 0.5rem;
     transition: color var(--fadeTime1), border var(--fadeTime1);
   }
-  input[type="text"]:hover, input[type="number"]:hover {
+  input[type="text"]:hover, input[type="number"]:hover, textarea:hover {
     border: 1px solid var(--colorPalette1a);
   }
-  input[type="text"]:focus, input[type="number"]:focus {
+  input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
     border: 1px solid var(--colorPalette1a);
     color: var(--colorPalette1a);
   }
@@ -291,13 +298,19 @@
     margin: 0.25rem 0;
   }
 
-  .edit-section {
+  section {
     width: 100%;
     margin-bottom: 2rem;
     display: grid;
     grid-template-columns: 35% 65%;
     grid-column-gap: 0.5rem;
     grid-row-gap: 0.5rem;
+    align-items: center;
+  }
+
+  .locations {
+    display: flex;
+    flex-direction: column;
     align-items: center;
   }
 
