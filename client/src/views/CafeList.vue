@@ -8,7 +8,8 @@
       v-bind:sortBy="sortBy"
       v-on:change-city="changeCity"
       v-on:change-line="changeLine"
-      v-on:change-sort="changeSort" />
+      v-on:change-sort="changeSort"
+      v-on:clear-filters="clearFilters" />
     <div class="cafe-list">
       <h3 v-if="!filteredCafes || !filteredCafes.length">No cafes with this filter.</h3>
       <div v-else class="cafe-item"
@@ -207,6 +208,7 @@
         switch (this.sortBy) {
           case 'rating':
             this.filteredCafes.sort((a, b) => {
+              if (!a.ratings || !b.ratings) return 0;
               if (a.ratings.overall === b.ratings.overall) return 0;
               if (!a.ratings.overall) return 1;
               else if (!b.ratings.overall) return -1;
@@ -252,6 +254,15 @@
         this.expanded = null;
         this.sortBy = string;
         this.sortFilteredCafes();
+      },
+
+      clearFilters() {
+        this.resetCitiesFilter();
+        this.resetLinesFilter();
+        this.reCalcFilter();
+        this.sortFilteredCafes();
+        this.expanded = null;
+        this.currentFilter = null;
       },
 
       isFavorite(cafeID) {
@@ -306,6 +317,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
   }
 
   section > * {

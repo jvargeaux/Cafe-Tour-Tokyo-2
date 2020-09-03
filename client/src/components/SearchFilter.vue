@@ -1,10 +1,11 @@
 <template>
   <div class="component-wrapper">
+    <button class="clear-filters-button" @click="clearFilters">Clear</button>
     <div class="filterContainer">
       <h6>Filter By</h6>
       <p>Area</p>
       <section>
-        <button v-for="city in Object.keys(cities)" @click="changeCity(city)" :class="calcClass(cities[city], 'cities')">{{ city }}</button>
+        <button v-for="city in Object.keys(cities)" @click="changeCity(city)" :class="calcClass(cities[city], 'cities')">{{ locale(city) }}</button>
       </section>
       <p>Line</p>
       <section>
@@ -56,6 +57,9 @@
       changeSort(string) {
         this.$emit('change-sort', string)
       },
+      clearFilters() {
+        this.$emit('clear-filters');
+      },
       formatTrainLineText: function(line) {
         if (!line) return '';
 
@@ -95,6 +99,7 @@
   }
 
   .component-wrapper {
+    position: relative;
     padding: 2rem;
     background-color: var(--navigationBG);
     border-radius: 0.5rem;
@@ -104,6 +109,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .clear-filters-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1rem;
+    padding: 0.75rem 1rem;
+    color: var(--textColorNeutral2);
+    background-color: transparent !important;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border: 1px solid var(--textColorNeutral2);
+    border-radius: 0.25rem;
+    transition: all 0.15s;
+  }
+  .clear-filters-button:hover {
+    color: var(--buttonColorHover);
+    border: 1px solid var(--buttonColorHover);
   }
 
   .filterContainer {

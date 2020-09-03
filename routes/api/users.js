@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 const User = require('../../models/User');
 
@@ -106,7 +107,28 @@ router.put('/:id', (req, res) => {
     }
   })
     .catch(err => console.log(err));
+});
 
+// Get user info in comment
+router.post('/comment', (req, res) => {
+  const userIDs = req.body.userIDs.map(id => new mongoose.Types.ObjectId(id));
+
+  User.find({ '_id': { $in: userIDs } }, (err, obj) => {
+    if (obj) {
+      let usersInfo = obj.map(user => {
+        return {
+          _id: user._id,
+          name: user.name,
+          email: user.email
+        }
+      });
+      res.status(200).json(usersInfo);
+    }
+    else {
+      res.status(400).json({ error: 'Couldn\'t find any users with requested IDs.' });
+    }
+  })
+    .catch(err => console.log(err));
 });
 
 module.exports = router;

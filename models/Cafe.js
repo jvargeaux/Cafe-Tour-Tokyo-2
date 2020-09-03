@@ -51,6 +51,13 @@ const CafeSchema = new Schema({
       order: String,
       textContent: String
     }]
+  },
+  comments: {
+    type: [{
+      userID: String,
+      content: String,
+      date: String
+    }]
   }
 });
 

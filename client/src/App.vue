@@ -127,6 +127,7 @@
     --navigationBG: #bed7d6;
     --navigationButtonColor: #089472;
     --navigationButtonColorHover: #0fa27e;
+    --navigationShadowColor: rgba(0,0,0,.25);
 
     --buttonColor: #616161;
     --buttonColorHover: #49bd88;
@@ -149,6 +150,7 @@
     --navigationBG: #373c44;
     --navigationButtonColor: #1b7760;
     --navigationButtonColorHover: #10886b;
+    --navigationShadowColor: rgba(0,0,0,.25);
 
     --buttonColor: #616161;
     --buttonColorHover: #2b8e67;
@@ -253,6 +255,32 @@
   input[type="text"], input[type="number"], input[type="date"],
   textarea, select, span {
     font-family: 'Mulish', 'Avenir', sans-serif;
+  }
+
+  input[type="text"], input[type="number"], textarea {
+    padding: 0.75rem;
+    font-size: var(--textSize1);
+    box-sizing: border-box;
+    border: 1px solid var(--colorTextNeutral1);
+    border-radius: 0.5rem;
+    transition: color var(--fadeTime1), border var(--fadeTime1);
+  }
+  input[type="text"]:hover, input[type="number"]:hover, textarea:hover {
+    border: 1px solid var(--colorPalette1a);
+  }
+  input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+    border: 1px solid var(--colorPalette1a);
+    color: var(--colorPalette1a);
+  }
+
+  select {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
+
+  input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   input[type="text"] {

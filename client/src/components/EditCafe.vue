@@ -256,30 +256,6 @@
 
 <style scoped>
 
-  input[type="text"], input[type="number"], textarea {
-    padding: 0.75rem;
-    font-size: var(--textSize1);
-    box-sizing: border-box;
-    border: 1px solid var(--colorTextNeutral1);
-    border-radius: 0.5rem;
-    transition: color var(--fadeTime1), border var(--fadeTime1);
-  }
-  input[type="text"]:hover, input[type="number"]:hover, textarea:hover {
-    border: 1px solid var(--colorPalette1a);
-  }
-  input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
-    border: 1px solid var(--colorPalette1a);
-    color: var(--colorPalette1a);
-  }
-  select {
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-  }
-  input[type="checkbox"] {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
   .ratings p, .post-header p {
     color: var(--colorTextNeutral1);
   }

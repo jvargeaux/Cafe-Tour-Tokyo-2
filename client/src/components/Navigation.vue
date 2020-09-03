@@ -19,9 +19,9 @@
     <div class="nav-wrapper">
       <section class="nav-container">
         <nav>
-          <router-link to="/">{{ locale('home') }}</router-link>
-          <router-link to="/about">{{ locale('about') }}</router-link>
-          <router-link to="/cafelist">{{ locale('cafe list') }}</router-link>
+          <router-link to="/" exact>Home</router-link>
+          <router-link to="/about">About</router-link>
+          <router-link to="/cafelist">Cafe List</router-link>
           <router-link v-if="user && user.email === 'fakeAdmin@gmail.com'" to="/api">API</router-link>
           <router-link v-if="user" to="/profile">Profile</router-link>
           <router-link v-if="user && user.email === 'jvargeaux@gmail.com'" to="/database">Database</router-link>
@@ -82,6 +82,11 @@
 </script>
 
 <style scoped>
+
+  .router-link-active {
+    background-color: var(--colorPalette3);
+  }
+
 
   .component-wrapper {
     position: relative;
@@ -207,7 +212,7 @@
     align-items: center;
     padding: 1.5rem 2rem;
     background-color: var(--navigationBG);
-    /* box-shadow: 0 0 20px rgba(98,98,98,.25); */
+    box-shadow: 0 0 1rem var(--navigationShadowColor);
     border-radius: 6px;
   }
 
@@ -222,8 +227,6 @@
     color: #fff;
     font-size: var(--textSize2);
     font-weight: 500;
-    /* text-transform: uppercase; */
-    /* background-color: rgba(24,24,24,.65); */
 
     /* I like this color */
     /* background-color: #2a6e5c; */
@@ -269,12 +272,6 @@
     h1 {
       font-size: 3rem;
     }
-    /* .component-wrapper {
-      height: 240px;
-    }
-    .nav-wrapper {
-      top: 240px;
-    } */
     .nav-container {
       padding: 0;
       background: 0;

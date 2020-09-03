@@ -48,7 +48,8 @@ router.post('/', (req, res) => {
     },
     locations: req.body.locations,
     imageUrls: req.body.imageUrls,
-    visits: req.body.visits
+    visits: req.body.visits,
+    comments: req.body.comments
   });
 
   if (id) {
@@ -81,6 +82,50 @@ router.post('/', (req, res) => {
       res.status(201).json(cafe);
     })
     .catch(err => console.log(err));
+  }
+
+})
+
+router.put('/:id/comment', (req, res) => {
+
+  // Authenticate user
+  // We don't want just anyone updating our precious cafes
+
+  let id = req.params.id;
+  console.log("Updating comments on cafe with ID:", id);
+
+  const newComment = req.body.comment;
+  console.log(req.body);
+
+  if (id) {
+    console.log("found id.");
+    Cafe.findOne({ _id: id }, (err, obj) => {
+      if (obj) {
+        console.log("found obj.");
+
+        let comments = obj.comments;
+        if (comments && comments.length) {
+          comments.push(newComment)
+        }
+        else {
+          comments = newComment;
+        }
+
+        console.log("comments:", comments);
+
+        Cafe.updateOne({ _id: id }, { comments: comments } )
+        .then(cafe => {
+          console.log("Updated comments in cafe: ", obj.name);
+          res.status(200).json({ comments: comments });
+        })
+        .catch(err => console.log(err));
+      }
+    })
+      .catch(err => console.log(err));
+  }
+  else {
+    console.log("Cannot find cafe with that ID.");
+    res.status(400).json({ error: 'No cafe found with ID: ' + id });
   }
 
 })

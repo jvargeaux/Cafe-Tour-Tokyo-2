@@ -45,7 +45,9 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+
     async fetchCafesFromDB({ commit, state }) {
+
       const API_CAFES_URL = window.location.hostname === 'localhost' ?
         'http://' + window.location.hostname + ':5000/api/cafes' :
         'https://' + window.location.host + '/api/cafes';
@@ -61,7 +63,9 @@ export const store = new Vuex.Store({
 
       commit('loadCafes', data);
     },
+
     async toggleFavorite({ commit, state }, cafeID) {
+
       let favorites = state.user.favorites;
       if (!favorites || !favorites.length) favorites = [cafeID];
       else {
@@ -81,7 +85,6 @@ export const store = new Vuex.Store({
       // Change in store first for faster UI experience
       commit('updateUserFavorites', favorites);
 
-      // Update in DB
       const API_USERS_URL = window.location.hostname === 'localhost' ?
         'http://' + window.location.hostname + ':5000/api/users' :
         'https://' + window.location.host + '/api/users';
@@ -92,10 +95,37 @@ export const store = new Vuex.Store({
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({favorites: favorites})
+        body: JSON.stringify({ favorites: favorites })
       });
       // if (response.status === 200) console.log("200 All good.");
       let data = await response.json();
+    },
+
+    async postComment({ commit, state }, commentData) {
+
+      let comment = {
+        userID: commentData.userID,
+        content: commentData.content,
+        date: commentData.date
+      }
+
+      const API_CAFES_URL = window.location.hostname === 'localhost' ?
+        'http://' + window.location.hostname + ':5000/api/cafes' :
+        'https://' + window.location.host + '/api/cafes';
+
+      let COMMENT_URL = API_CAFES_URL + `/${commentData.cafeID}/comment`;
+
+      let response = await fetch(COMMENT_URL, {
+        method: "PUT",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ comment: comment })
+      });
+      // if (response.status === 200) console.log("200 All good.");
+      let data = await response.json();
+      console.log(data);
     }
   }
 })

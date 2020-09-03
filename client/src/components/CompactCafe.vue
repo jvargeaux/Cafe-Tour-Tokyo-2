@@ -9,7 +9,7 @@
       <h6>{{ cafe.spot }}</h6>
     </section>
     <section class="rating">
-      <StarRating v-bind:rating="cafe.ratings.overall" :star_size="18" />
+      <StarRating v-bind:rating="cafe.ratings ? cafe.ratings.overall : 0" :star_size="18" />
     </section>
     <section class="locations-container">
       <div class="location" v-for="location in cafe.locations">

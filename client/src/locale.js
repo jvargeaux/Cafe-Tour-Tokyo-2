@@ -144,6 +144,10 @@ export const locale = {
     en: 'Seibu Shinjuku',
     jp: '西武新宿'
   },
+  'seibu_ikebukuro': {
+    en: 'Seibu Ikebukuro',
+    jp: '西武池袋'
+  },
 
   'metro_hibiya': {
     en: 'Hibiya',

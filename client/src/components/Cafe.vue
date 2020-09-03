@@ -83,21 +83,44 @@
           <div class="visit-item"
           v-for="(visit, index) in cafe.visits"
           :key="index">
-          <div class="visit-header">
-            <h6>{{ formatDate(visit.date) }}</h6>
-            <section>
-              <StarRating v-if="visit.rating" class="stars" v-bind:rating="visit.rating" :star_size="14" />
-              <p class="overall-rating">{{ visit.rating ? visit.rating : '-' }}</p>
-            </section>
+            <div class="visit-header">
+              <h6>{{ formatDate(visit.date) }}</h6>
+              <section>
+                <StarRating v-if="visit.rating" class="stars" v-bind:rating="visit.rating" :star_size="14" />
+                <p class="overall-rating">{{ visit.rating ? visit.rating : '-' }}</p>
+              </section>
+            </div>
+            <div class="visit-order">
+              <p>{{ locale('ordered') }}:</p>
+              <h6>{{ visit.order }}</h6>
+            </div>
+            <p class="visit-content">{{ visit.textContent }}</p>
           </div>
-          <div class="visit-order">
-            <p>{{ locale('ordered') }}:</p>
-            <h6>{{ visit.order }}</h6>
-          </div>
-          <p class="visit-content">{{ visit.textContent }}</p>
         </div>
-      </div>
-    </section>
+      </section>
+      <section v-if="loadedComments && cafe.comments && cafe.comments.length" class="comments">
+        <h5>Comments</h5>
+        <div class="comment-item"
+        v-for="(comment, index) in cafe.comments"
+        :key="index">
+          <div class="comment-header">
+            <h6>{{ commentIDs[comment.userID] }}</h6>
+            <p>{{ comment.date && formatDate(comment.date) }}</p>
+          </div>
+          <p class="comment-content">{{ comment.content }}</p>
+        </div>
+      </section>
+      <section class="new-comment">
+        <button v-if="!commenting" @click="showNewComment">Add Comment</button>
+        <div v-else>
+          <textarea @input="changeCommentContent" placeholder="Your comment here..."></textarea>
+          <p v-if="isNewCommentError" id="new-comment-error">No comment to post.</p>
+          <div>
+            <button @click="postNewComment">Post Comment</button>
+            <button @click="cancelNewComment">Cancel</button>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -122,7 +145,12 @@
     },
     data() {
       return {
-        selectedImage: null
+        selectedImage: null,
+        commenting: false,
+        newCommentContent: null,
+        isNewCommentError: false,
+        loadedComments: false,
+        commentIDs: {}
       }
     },
     methods: {
@@ -165,9 +193,15 @@
         }
       },
       formatDate(dateString) {
-        if (!dateString) return '-';
+        if (!dateString) return '';
 
         let date = new Date(dateString);
+        if (date instanceof Date && !isNaN(date.valueOf())) {
+          // Date is valid
+        }
+        else {
+          date = new Date(parseInt(dateString))
+        }
 
         if (this.$store.state.currentLanguage == 'jp') {
           return date.toLocaleString('ja-JP', {
@@ -198,12 +232,81 @@
       },
       closeImage(index) {
         this.selectedImage = null;
+      },
+
+      showNewComment() {
+        this.commenting = true;
+      },
+      cancelNewComment() {
+        this.commenting = false;
+        this.isNewCommentError = false;
+      },
+      changeCommentContent() {
+        this.newCommentContent = event.target.value;
+      },
+      postNewComment() {
+        if (!this.newCommentContent || !this.newCommentContent.trim()) {
+          this.isNewCommentError = true;
+          return;
+        }
+
+        this.isNewCommentError = false;
+
+        let commentData = {
+          cafeID: this.cafe._id,
+          userID: this.$store.state.user ? this.$store.state.user._id : null,
+          content: this.newCommentContent,
+          date: Date.now()
+        }
+
+        this.$store.dispatch('postComment', commentData)
+          .then(() => {
+            console.log("comment posted.");
+          })
+          .catch(err => console.log(err));
+      },
+
+      populateCommentUserInfo() {
+        let allIDs = this.cafe.comments.map(comment => comment.userID);
+        let userIDs = [...new Set(allIDs)]; // remove duplicates
+
+        const API_USERS_URL = window.location.hostname === 'localhost' ?
+          'http://' + window.location.hostname + ':5000/api/users/comment' :
+          'https://' + window.location.host + '/api/users/comment';
+
+        fetch(API_USERS_URL, {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userIDs: userIDs })
+        })
+          .then(response => response.json())
+          .then(userInfo => {
+            if (userInfo && userInfo.length) {
+              userInfo.forEach(user => {
+                this.commentIDs[user._id] = user.name;
+              });
+              this.loadedComments = true;
+            }
+          })
+          .catch(err => console.log(err));
       }
+    },
+    mounted() {
+      this.populateCommentUserInfo();
     }
   }
 </script>
 
 <style scoped>
+
+  section {
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+  }
 
   h2 {
     color: #fff;
@@ -297,11 +400,15 @@
     margin: 1rem 0;
   }
 
-  .ratings, .features, .location {
+  .information > * {
     display: flex;
     flex-direction: column;
     flex: 1;
     padding: 1rem 2rem;
+  }
+
+  .ratings {
+    align-items: flex-start;
   }
 
   .ratings span {
@@ -314,7 +421,19 @@
     margin-right: 0.5rem;
   }
 
+  .features {
+    align-items: center;
+  }
+
+  .location {
+    align-items: flex-end;
+    text-align: right;
+  }
+
   .location article {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     margin-bottom: 1rem;
   }
 
@@ -367,6 +486,63 @@
   .visit-content {
     grid-column: 1 / 3;
     padding-top: 1rem;
+  }
+
+  .comments {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem;
+  }
+
+  .comments h5 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .comment-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .comment-header p {
+    margin-left: 1rem;
+    font-size: 0.8rem;
+    color: var(--textColorNeutral4);
+  }
+
+  .comment-item {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,.15);
+  }
+  .comment-item:last-child {
+    border: 0;
+  }
+
+  .new-comment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .new-comment div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .new-comment div > * {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #new-comment-error {
+    color: #ac2b42;
   }
 
   @media screen and (max-width: 860px) {
